@@ -11,13 +11,15 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(isSupported: (RCTResponseSenderBlock)callback)
 {
-    if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
-        callback(@[[NSNull null], @true]);
-    }
-    else {
-        callback(@[RCTMakeError(@"OnePassword is not supported.", nil, nil)]);
-        return;
-    }
+	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
+			callback(@[[NSNull null], @true]);
+		}
+		else {
+			callback(@[RCTMakeError(@"OnePassword is not supported.", nil, nil)]);
+			return;
+		}
+	}];
 }
 
 RCT_EXPORT_METHOD(changeLogin: (NSString *)url
